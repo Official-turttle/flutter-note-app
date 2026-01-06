@@ -13,11 +13,15 @@ class NoteRepository {
           .collection('notes')
           .where('userId', isEqualTo: userId)
           .get();
-      print("fetch note for userId: $userId, found ${data.docs.length} notes.");
+
       List<Note> notes = data.docs.map((doc) {
-        return Note.fromJson(doc.data() as Map<String, dynamic>);
+        return Note.fromJson(doc.data() as Map<String, dynamic>, doc.id);
       }).toList();
 
+      print("Fetched Notes: ");
+      for (var note in notes) {
+        note.printNote(); // This will print each note's details
+      }
       return notes;
     } catch (e) {
       print("Error fetching notes: $e");
@@ -54,6 +58,7 @@ class NoteRepository {
   // Deleting a note
   Future<void> deleteNote(String id) async {
     try {
+      // print("deleting id ${id}");
       await _firebaseFirestore.collection('notes').doc(id).delete();
     } catch (e) {
       print("Error deleting note: $e");

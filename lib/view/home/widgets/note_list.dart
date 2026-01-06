@@ -80,7 +80,7 @@ class _NoteListWidgetState extends State<NoteListWidget> {
                               IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
-                                  print("Delete note: ${note.title}");
+                                  notesViewModel.deleteNote(note.id);
                                 },
                               ),
                           ],
