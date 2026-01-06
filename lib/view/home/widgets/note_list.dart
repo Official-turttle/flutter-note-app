@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:map_exam/viewmodel/note_viewmodel.dart';
 import 'package:provider/provider.dart';
 
-class NoteListWidget extends StatelessWidget {
+class NoteListWidget extends StatefulWidget {
+  @override
+  _NoteListWidgetState createState() => _NoteListWidgetState();
+}
+
+class _NoteListWidgetState extends State<NoteListWidget> {
+  bool isContentVisible = true; // Track if content is visible or not
+
   @override
   Widget build(BuildContext context) {
     final notesViewModel = Provider.of<NotesViewModel>(context);
@@ -35,13 +42,15 @@ class NoteListWidget extends StatelessWidget {
                           note.title,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: isContentVisible ? 16 : 24,
                           ),
                         ),
-                        subtitle: Text(
-                          note.content,
-                          style: TextStyle(fontSize: 12),
-                        ),
+                        subtitle: isContentVisible
+                            ? Text(
+                                note.content,
+                                style: TextStyle(fontSize: 14),
+                              )
+                            : null, // Hide content when collapsed
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -67,7 +76,6 @@ class NoteListWidget extends StatelessWidget {
                   );
                 },
               ),
-
         // Floating Action Buttons
         Positioned(
           bottom: 20,
@@ -75,7 +83,26 @@ class NoteListWidget extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // "Show Less" button
+              // Show Less button
+              FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    isContentVisible = !isContentVisible; // Toggle visibility
+                  });
+                },
+                mini: true,
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                tooltip: isContentVisible ? 'Show Less' : 'Show More',
+                child: Icon(
+                  isContentVisible ? Icons.arrow_drop_up_rounded : Icons.menu,
+                  color: Colors.white,
+                  size: 16,
+                ),
+              ),
+              // Add New button
               FloatingActionButton(
                 onPressed: () {
                   // Logic for "Add New"
@@ -86,30 +113,13 @@ class NoteListWidget extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
                 ),
-                tooltip: 'Add New Note',
-                child: Icon(
-                  Icons.expand_outlined,
-                  color: Colors.white,
-                  size: 16,
-                ),
-              ),
-
-              FloatingActionButton(
-                onPressed: () {
-                  print("Collapse pressed");
-                },
-                mini: true,
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                tooltip: 'Add New Note',
+                tooltip: "Add new",
                 child: Icon(
                   Icons.add,
                   color: Colors.white,
                   size: 16,
                 ),
-              )
+              ),
             ],
           ),
         ),
