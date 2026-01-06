@@ -19,7 +19,7 @@ class App extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const LoginScreen(),
-      home: const HomeScreen(),
+      // home: const HomeScreen(),
       // home: const EditScreen(),
     );
   }
