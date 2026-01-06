@@ -9,6 +9,8 @@ class NoteListWidget extends StatefulWidget {
 
 class _NoteListWidgetState extends State<NoteListWidget> {
   bool isContentVisible = true; // Track if content is visible or not
+  int?
+      _selectedNoteIndex; // Store the index of the selected note for editing tools
 
   @override
   Widget build(BuildContext context) {
@@ -38,34 +40,49 @@ class _NoteListWidgetState extends State<NoteListWidget> {
                           EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                       child: ListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: Text(
-                          note.title,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: isContentVisible ? 16 : 24,
+                        title: GestureDetector(
+                          onLongPress: () {
+                            setState(() {
+                              if (_selectedNoteIndex == index) {
+                                _selectedNoteIndex = null;
+                              } else {
+                                _selectedNoteIndex = index;
+                              }
+                            });
+                          },
+                          child: Text(
+                            note.title,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: isContentVisible ? 14 : 18,
+                            ),
                           ),
                         ),
                         subtitle: isContentVisible
                             ? Text(
                                 note.content,
                                 style: TextStyle(fontSize: 14),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 3,
                               )
                             : null, // Hide content when collapsed
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            IconButton(
-                              icon: Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () {
-                                print("Edit note: ${note.title}");
-                              },
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                print("Delete note: ${note.title}");
-                              },
-                            ),
+                            if (_selectedNoteIndex == index)
+                              IconButton(
+                                icon: Icon(Icons.edit, color: Colors.blue),
+                                onPressed: () {
+                                  print("Edit note: ${note.title}");
+                                },
+                              ),
+                            if (_selectedNoteIndex == index)
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  print("Delete note: ${note.title}");
+                                },
+                              ),
                           ],
                         ),
                         onTap: () {
