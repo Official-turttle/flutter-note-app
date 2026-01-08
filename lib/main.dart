@@ -1,8 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:map_exam/routes/routes.dart';
+import 'package:map_exam/viewmodel/login_viewmodel.dart';
+import 'package:map_exam/viewmodel/note_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 // import 'login_screen.dart';
-import 'home_screen.dart';
+// import 'home_screen.dart';
 // import 'edit_screen.dart';
 
 void main() async {
@@ -23,14 +27,19 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'myFirst',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => LoginViewModel()),
+        ChangeNotifierProvider(create: (context) => NotesViewModel()),
+      ],
+      child: MaterialApp(
+        title: 'myFirst',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        initialRoute: AppRoutes.login,
+        routes: AppRoutes.routes(),
       ),
-      // home: const LoginScreen(),
-      // home: const HomeScreen(),
-      // home: const EditScreen(),
     );
   }
 }
