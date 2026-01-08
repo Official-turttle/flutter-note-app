@@ -16,21 +16,56 @@ class NotesViewModel extends ChangeNotifier {
   Future<void> fetchNotes() async {
     print("Fetching notes for user...");
     _notes = await _noteRepository.getNotes();
+    print("notes $notes");
     notifyListeners();
+  }
+
+  Note? getNoteById(String noteId) {
+    try {
+      return _notes.firstWhere((note) => note.id == noteId);
+    } catch (e) {
+      return null; // Return null if no note is found with the given ID
+    }
   }
 
   // Add a new note
   Future<void> addNote(String title, String content) async {
     final String userId =
         FirebaseAuth.instance.currentUser!.uid; // Get the current user's UID
-    await _noteRepository
-        .addNote(Note(title: title, content: content, userId: userId));
+
+    Note newNote = Note(id: '', title: title, content: content, userId: userId);
+
+    try {
+      await _noteRepository.addNote(newNote);
+      await fetchNotes(); // Re-fetch notes to update the local list
+    } catch (e) {
+      print("Error adding note: $e");
+    }
+
     await fetchNotes();
   }
 
   // Update an existing note
-  Future<void> updateNote(String id, Note note) async {
-    await _noteRepository.updateNote(id, note);
+  Future<void> updateNote(String id, String newTitle, String newContent) async {
+    try {
+      final existingNote = getNoteById(id);
+      if (existingNote != null) {
+        // Create a new Note with the updated content
+        final updatedNote = Note(
+          id: id,
+          title: newTitle,
+          content: newContent,
+          userId: existingNote.userId,
+        );
+
+        await _noteRepository.updateNote(id, updatedNote);
+        await fetchNotes(); // Re-fetch notes to update the local list
+      } else {
+        print("Note with ID $id not found.");
+      }
+    } catch (e) {
+      print("Error updating note: $e");
+    }
     await fetchNotes();
   }
 

@@ -36,6 +36,7 @@ class NoteRepository {
         'title': note.title,
         'content': note.content,
         'userId': note.userId,
+        'createdAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
       print("Error adding note: $e");
@@ -50,6 +51,7 @@ class NoteRepository {
         'content': note.content,
         'updatedAt': FieldValue.serverTimestamp(),
       });
+      print("Note updated with ID: $id");
     } catch (e) {
       print("Error updating note: $e");
     }
