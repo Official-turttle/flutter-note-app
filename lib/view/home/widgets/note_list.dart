@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:map_exam/routes/routes.dart';
 import 'package:map_exam/viewmodel/note_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -73,7 +74,14 @@ class _NoteListWidgetState extends State<NoteListWidget> {
                               IconButton(
                                 icon: Icon(Icons.edit, color: Colors.blue),
                                 onPressed: () {
-                                  print("Edit note: ${note.title}");
+                                  Navigator.pushNamed(
+                                    context,
+                                    AppRoutes.edit,
+                                    arguments: {
+                                      'mode': 'edit',
+                                      'note': note
+                                    }, // Pass mode and note
+                                  );
                                 },
                               ),
                             if (_selectedNoteIndex == index)
@@ -86,7 +94,14 @@ class _NoteListWidgetState extends State<NoteListWidget> {
                           ],
                         ),
                         onTap: () {
-                          print("Tapped on ${note.title}");
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.edit,
+                            arguments: {
+                              'mode': 'view',
+                              'note': note
+                            }, // Pass mode and note
+                          );
                         },
                       ),
                     ),
@@ -123,7 +138,14 @@ class _NoteListWidgetState extends State<NoteListWidget> {
               FloatingActionButton(
                 onPressed: () {
                   // Logic for "Add New"
-                  print("Add New pressed");
+                  Navigator.pushNamed(
+                    context,
+                    AppRoutes.edit,
+                    arguments: {
+                      'mode': 'add',
+                      'note': null
+                    }, // Pass mode and null for a new note
+                  );
                 },
                 mini: true,
                 backgroundColor: Colors.blue,
