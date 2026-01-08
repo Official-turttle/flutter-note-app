@@ -34,29 +34,68 @@ class _EditScreenState extends State<EditScreen> {
     super.dispose();
   }
 
+  void _saveNote() {
+    final notesViewModel = Provider.of<NotesViewModel>(context, listen: false);
+
+    if (widget.mode == 'edit') {
+      notesViewModel.updateNote(
+        widget.note!.id,
+        _titleController.text,
+        _contentController.text,
+      );
+    } else if (widget.mode == 'add') {
+      notesViewModel.addNote(
+        _titleController.text,
+        _contentController.text,
+      );
+    }
+
+    Navigator.pop(context); // Close the screen after saving
+  }
+
   @override
   Widget build(BuildContext context) {
-    final notesViewModel = Provider.of<NotesViewModel>(context);
-
     return Scaffold(
       appBar: CustomAppBar(
         mode: widget.mode, // Pass the mode ('edit', 'view', 'add')
-        onSave: () {
-          if (widget.mode == 'edit') {
-            notesViewModel.updateNote(
-              widget.note!.id,
-              _titleController.text,
-              _contentController.text,
-            );
-          } else {
-            notesViewModel.addNote(
-                _titleController.text, _contentController.text);
-          }
-          Navigator.pop(context);
-        },
+        onSave: widget.mode != 'view' ? _saveNote : null,
         onClose: () {
           Navigator.pop(context);
         },
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                labelText: 'Title',
+                hintText: 'Enter the note title',
+                filled: widget.mode == 'view',
+                fillColor: widget.mode == 'view' ? Colors.transparent : null,
+              ),
+              readOnly:
+                  widget.mode == 'view', // Make it read-only in 'view' mode
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: _contentController,
+              decoration: InputDecoration(
+                labelText: 'Content',
+                hintText: 'Enter your note content here',
+                filled: widget.mode == 'view',
+                fillColor: widget.mode == 'view' ? Colors.transparent : null,
+              ),
+              readOnly:
+                  widget.mode == 'view', // Make it read-only in 'view' mode
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              minLines: 2,
+            ),
+          ],
+        ),
       ),
     );
   }
