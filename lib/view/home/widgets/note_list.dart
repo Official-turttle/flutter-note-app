@@ -55,7 +55,8 @@ class _NoteListWidgetState extends State<NoteListWidget> {
                             note.title,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: isContentVisible ? 14 : 18,
+                              fontSize:
+                                  16, // Adjusted to keep a consistent font size for the title
                             ),
                           ),
                         ),
@@ -64,7 +65,8 @@ class _NoteListWidgetState extends State<NoteListWidget> {
                                 note.content,
                                 style: TextStyle(fontSize: 14),
                                 overflow: TextOverflow.ellipsis,
-                                maxLines: 3,
+                                maxLines:
+                                    3, // Limiting to 3 lines when content is visible
                               )
                             : null, // Hide content when collapsed
                         trailing: Row(
@@ -79,7 +81,7 @@ class _NoteListWidgetState extends State<NoteListWidget> {
                                     AppRoutes.edit,
                                     arguments: {
                                       'mode': 'edit',
-                                      'note': note
+                                      'note': note,
                                     }, // Pass mode and note
                                   );
                                 },
@@ -99,7 +101,7 @@ class _NoteListWidgetState extends State<NoteListWidget> {
                             AppRoutes.edit,
                             arguments: {
                               'mode': 'view',
-                              'note': note
+                              'note': note,
                             }, // Pass mode and note
                           );
                         },
@@ -119,7 +121,8 @@ class _NoteListWidgetState extends State<NoteListWidget> {
               FloatingActionButton(
                 onPressed: () {
                   setState(() {
-                    isContentVisible = !isContentVisible; // Toggle visibility
+                    isContentVisible =
+                        !isContentVisible; // Toggle visibility of content only
                   });
                 },
                 mini: true,

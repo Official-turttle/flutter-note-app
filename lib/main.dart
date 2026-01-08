@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:map_exam/routes/routes.dart';
+import 'package:map_exam/view/home/home_screen.dart';
 import 'package:map_exam/viewmodel/login_viewmodel.dart';
 import 'package:map_exam/viewmodel/note_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -38,7 +39,11 @@ class App extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         initialRoute: AppRoutes.login,
-        routes: AppRoutes.routes(),
+        onGenerateRoute:
+            AppRoutes.generateRoute, // Use generateRoute for dynamic routes
+        onUnknownRoute: (settings) {
+          return MaterialPageRoute(builder: (_) => HomeScreen());
+        },
       ),
     );
   }

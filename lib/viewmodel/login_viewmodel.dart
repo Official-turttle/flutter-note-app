@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:map_exam/data/repository/auth.dart';
+import 'package:map_exam/routes/routes.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final AuthRepository _authRepository = AuthRepository();
@@ -21,6 +22,15 @@ class LoginViewModel extends ChangeNotifier {
     } finally {
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> signout(BuildContext context) async {
+    try {
+      await _authRepository.signout();
+      Navigator.pushNamed(context, AppRoutes.login);
+    } catch (e) {
+      debugPrint("error man ${e}");
     }
   }
 }

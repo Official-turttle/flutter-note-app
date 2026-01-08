@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String mode; // 'view', 'edit', or 'add'
+  final String mode; // 'view', 'edit', 'add', or 'home'
   final int? totalNotes;
   final Function()? onSave;
   final Function()? onClose;
+  final Function()? onLogout; // New parameter for logout action
+  final Function()? onAddNote; // New parameter for adding a note in home mode
 
   CustomAppBar({
     required this.mode,
     this.totalNotes,
     this.onSave,
     this.onClose,
+    this.onLogout, // Added logout parameter
+    this.onAddNote, // Added add note parameter for home mode
   });
 
   Widget _buildIconButton(Icon icon, Function()? onPressed) {
@@ -20,7 +24,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         width: 32.0,
         height: 32.0,
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.65),
+          color: Colors.white.withOpacity(0.65), // Fixed opacity
           shape: BoxShape.circle,
         ),
         child: IconButton(
@@ -44,7 +48,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ? 'View Note'
             : mode == 'edit'
                 ? 'Edit Note'
-                : 'Add New Note',
+                : mode == 'add'
+                    ? 'Add New Note'
+                    : mode == 'home'
+                        ? 'Home' // Title for home mode
+                        : 'Notes', // Default title
         style: TextStyle(color: Colors.white),
       ),
       automaticallyImplyLeading: false,
@@ -60,16 +68,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             onClose,
           ),
 
-        // Circular badge for totalNotes
-        if (totalNotes != null)
+        // Circular badge for totalNotes (only in Home mode)
+        if (mode == 'home' && totalNotes != null)
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
               padding: EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.65),
-                shape:
-                    BoxShape.circle, // Circular shape for the total notes badge
+                color: Colors.white.withOpacity(0.65),
+                shape: BoxShape.circle,
               ),
               child: Center(
                 child: Text(
@@ -78,6 +85,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
+          ),
+
+        // Logout button (added)
+        if (onLogout != null)
+          _buildIconButton(
+            Icon(Icons.exit_to_app),
+            onLogout, // Call the logout function
           ),
       ],
     );

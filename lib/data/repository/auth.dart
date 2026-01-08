@@ -16,4 +16,13 @@ class AuthRepository {
       rethrow;
     }
   }
+
+  Future<void> signout() async {
+    try {
+      await auth.signOut();
+    } catch (e) {
+      print("Error on sign out ${e}");
+      rethrow;
+    }
+  }
 }
